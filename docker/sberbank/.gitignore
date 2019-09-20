@@ -1,0 +1,13 @@
+venv
+tmp/
+.idea/
+*.kdev4
+*.pyc
+*.pyo
+*.pid
+*.log
+*.log.*
+.python-version
+.DS_Store
+.mypy_cache/
+.pytest_cache/

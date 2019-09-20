@@ -1,0 +1,3 @@
+aiomisc[uvloop]
+aiohttp
+pyyaml
