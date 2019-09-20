@@ -1,0 +1,48 @@
+pipeline {
+
+  agent any
+
+  parameters {
+    string(defaultValue: 'https://github.com/shukalov/sb_devops.git', description: 'Repository', name: 'REPOSITORY', trim: true)
+    string(defaultValue: 'master', description: 'Branch', name: 'BRANCH', trim: true)
+    string(defaultValue: 'sb_python', description: 'Container name', name: 'CONTAINER', trim: true)
+    choice(name: 'TASK', choices: ['build_docker_image', 'start_container', 'stop_container'], description: 'Task')
+  }
+  
+  stages {
+
+    stage('GIT clone') {
+      steps {
+        print "DEBUG: Repository=${REPOSITORY}, branch = ${BRANCH}"
+        git branch: BRANCH, url: REPOSITORY
+      }
+    }
+
+    stage('Build Docker image') {      
+      when {
+          expression { return TASK.contains('build_docker_image') }
+      }
+      steps {
+        sh("docker build -f ./docker/Dockerfile -t ${CONTAINER} ./docker")
+      }
+    }
+
+    stage('Start container') {
+      when {
+          expression { return TASK.contains('start_container') }
+      }
+      steps {
+        sh("docker run -d --name ${CONTAINER} --rm -v /var/log/sberbank_log/:/root/sberbank/tmp/ ${CONTAINER}")
+      }
+    }
+
+    stage('Stop container') {
+      when {
+          expression { return TASK.contains('stop_container') }
+      }
+      steps {
+        sh("docker stop ${CONTAINER}")
+      }
+    }
+  }
+}
