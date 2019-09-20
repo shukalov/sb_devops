@@ -1,0 +1,7 @@
+---
+address: "::"
+port: 8080
+
+max_workers: 2
+
+task_uid_api: 'https://www.uuidgenerator.net/api/version4'
