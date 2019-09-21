@@ -1,0 +1,17 @@
+---
+- debug:
+    msg: 'Шаблоны'
+- file:
+    path: '{{ item.value.dest | dirname }}'
+    state: directory
+    owner: '{{ item.value.owner | default("root") }}'
+  loop: '{{ templates|default({})|dict2items }}'
+  become: yes
+- template:
+    src: '{{ item.key }}'
+    dest: '{{ item.value.dest }}'
+    owner: '{{ item.value.owner | default("root") }}'
+    mode: '{{ item.value.mode | default("") }}'
+  notify: '{{ item.value.notify | default([]) }}'
+  loop: '{{ templates|default({})|dict2items }}'
+  become: yes

@@ -1,0 +1,5 @@
+---
+- name: jenkins config
+  import_tasks: jenkins_config.yml
+
+

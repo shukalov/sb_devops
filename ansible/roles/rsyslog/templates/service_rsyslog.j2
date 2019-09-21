@@ -1,0 +1,13 @@
+# provides UDP syslog reception
+module(load="imudp")
+module(load="imuxsock")
+
+input(type="imudp" port="{{ rsyslog.port }}")
+
+{% for k, v in rsyslog.apps.items() %}
+if $programname startswith_i "{{ v.startswith }}"
+then {
+    {{ v.log_path }}
+    stop
+}
+{% endfor %}

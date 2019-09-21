@@ -1,0 +1,14 @@
+---
+- block:
+    - debug:
+        msg: 'Устанавливаем Jenkins'
+
+    - name: apt install jenkins
+      apt:
+        name: jenkins
+        state: present
+        update_cache: yes
+      notify: jenkins config
+      when:  ansible_os_family == 'Debian'
+
+  when: (jenkins is defined and jenkins)

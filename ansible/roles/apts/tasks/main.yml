@@ -1,0 +1,10 @@
+---
+- debug:
+    msg: 'Ставим apt: {{ apt | default([]) }}'
+
+- name: Install apt packages
+  apt:
+    name:  '{{ apt | default(["apt"]) }}'
+    state: present
+    update_cache: yes
+  when:  ansible_os_family == 'Debian'

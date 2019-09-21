@@ -1,0 +1,9 @@
+---
+- hosts: sberbank
+  become: yes
+
+  roles:
+    - reps
+    - apts
+    - rsyslog
+    - jenkins
