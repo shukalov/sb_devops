@@ -1,0 +1,42 @@
+---
+  ansible_python_interpreter: /usr/bin/python3
+
+  # устанавливаем дефолтные значения для учётной записи администратора Jenkins
+  jenkins:
+      admin_username: admin
+      admin_password: 'def_passw'
+
+  # список необходимых пакетов
+  apt:
+    - git
+    - sudo
+    - openjdk-11-jdk
+    - docker-ce
+    - ansible
+
+  # пакеты для настройки кастомных репозиториев
+  reps_apt:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+
+  # ключи для кастомных репозиториев
+  reps_keys_urls:
+    - 'https://download.docker.com/linux/ubuntu/gpg'
+    - 'https://pkg.jenkins.io/debian/jenkins.io.key'
+
+  # кастомные репозитории
+  reps:
+    - 'deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable'
+    - 'deb https://pkg.jenkins.io/debian-stable binary/'
+    - 'ppa:ansible/ansible'
+
+  # чтобы в один прекрасный момент на сервере не закончилось место из-за нашего python сервиса - настраиваем logrotate
+  rsyslog:
+    apps:
+      sberbank:
+        log_path: '/var/log/sberbank_log/service.log'
+    logrotate_config: service_logrotate.j2
+    logrotate_config_name: sberbank

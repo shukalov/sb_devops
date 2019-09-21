@@ -1,0 +1,13 @@
+{% for k, v in rsyslog.apps.items() %}
+{{ v.log_path }} {
+       daily
+       rotate 7
+       delaycompress
+       compress
+       notifempty
+       missingok
+       postrotate
+           /usr/bin/pkill -HUP rsyslogd
+       endscript
+}
+{% endfor %}

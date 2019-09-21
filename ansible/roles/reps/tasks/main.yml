@@ -1,0 +1,27 @@
+---
+- name: Check whether common software is installed
+  apt:
+    name: '{{ reps_apt | default(["apt"]) }}'
+    state: present
+  when:  ansible_os_family == 'Debian'
+
+- name: Add reps urls signing key
+  apt_key:
+    url: '{{ item }}'
+    state: present
+  loop: '{{ reps_keys_urls | default([]) }}'
+  when:  ansible_os_family == 'Debian'
+
+- name: Add reps files signing key
+  apt_key:
+    data: '{{ item }}'
+    state: present
+  loop: '{{ files_keys_urls | default([]) }}'
+  when:  ansible_os_family == 'Debian'
+
+- name: Set up APT repo
+  apt_repository:
+    repo: '{{ item }}'
+    state: present
+  loop: '{{ reps | default([]) }}'
+  when:  ansible_os_family == 'Debian'

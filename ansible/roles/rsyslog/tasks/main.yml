@@ -1,0 +1,31 @@
+---
+- debug:
+    msg: 'Настраиваем rsyslog'
+
+- name: Install apt packages
+  apt:
+    name:  '{{ rsyslog.apt_packages | default(["apt"]) }}'
+    state: present
+    update_cache: yes
+  notify: Restart rsyslog
+  when:  ansible_os_family == 'Debian'  
+
+- name: Set RSYSLOG config
+  template:
+    src: '{{ rsyslog.config }}'
+    dest: /etc/rsyslog.d/{{ rsyslog.config_name }}
+    owner: root
+    group: root
+  when: (rsyslog.config is defined and rsyslog.config)
+  notify: Restart rsyslog
+
+- meta: flush_handlers
+
+- name: Setup logrotate
+  template:
+    src: '{{ rsyslog.logrotate_config }}'
+    dest: /etc/logrotate.d/{{ rsyslog.logrotate_config_name }}
+    owner: root
+    group: root
+
+
